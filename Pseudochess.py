@@ -43,7 +43,7 @@ def znajdz_ruch_g():  # Znajduje możliwe ruchy dla gracza
     global plansza, lista_pustych_g, lista_bic_g
     lista_pustych_g = []
     lista_bic_g = []
-    for pionek in lista_g: #Skomplikowana pętla znajdująca możliwe ruchy i bicia, try i except uważa by listy nie mogły loopować się do -1
+    for pionek in lista_g:  # Skomplikowana pętla znajdująca możliwe ruchy i bicia, try i except uważa by listy nie mogły loopować się do -1
         if plansza[pionek[0] - 1][pionek[1]] == 'O':
             lista_pustych_g.append(((pionek[0], pionek[1]), (pionek[0] - 1, pionek[1])))
             # print('puste', pionek[0], pionek[1])
@@ -103,7 +103,7 @@ def ruch_g():  # Wyświetla możliwe ruchy z znajdz_ruch_g i pozwala na wybór k
                                                                                            ruch[1][0], ruch[1][1]))
         n += 1
     lista_ruchow_g = lista_pustych_g + lista_bic_g
-    #Win condition w wypadku braku możliwych ruchów
+    # Win condition w wypadku braku możliwych ruchów
     if lista_ruchow_g == []:
         print('Komputer wygrał!')
         exit()
@@ -119,7 +119,7 @@ def ruch_k():  # Losuje ruch komputera z znajdz_ruchy_k
     try:
         global plansza
         lista_ruchow_k = lista_pustych_k + lista_bic_k
-        #Win condition przy braku możliwych ruchów
+        # Win condition przy braku możliwych ruchów
         if lista_ruchow_k == []:
             print('Gracz wygrał!')
             exit()
@@ -137,7 +137,7 @@ def czy_koniec():  # Sprawdza czy gra się zakończyła - win condition
     global plansza
     ilosc_g = 0
     ilosc_k = 0
-    #Wygrana gdy gracz doszedł do drógej strony planszy
+    # Wygrana gdy gracz doszedł do drógej strony planszy
     for kolumna in plansza[0]:
         if kolumna == 'g':
             print('Gracz wygrał!')
@@ -147,7 +147,7 @@ def czy_koniec():  # Sprawdza czy gra się zakończyła - win condition
         if kolumna == 'k':
             print('Komputer wygrał!')
             exit()
-    #Wygrana gdy któryś z graczy zniszczył wszystkie piony przeciwnika
+    # Wygrana gdy któryś z graczy zniszczył wszystkie piony przeciwnika
     for rzad in plansza:
         for kolumna in rzad:
             if kolumna == 'g':
