@@ -1,12 +1,13 @@
 import random
 
-plansza = [['k', 'k', 'k'], ['O', 'O', 'O'], ['g', 'g', 'g']]
+plansza = [['k', 'k', 'k'], ['O', 'O', 'O'], ['g', 'g', 'g']] #Początkowe ustawienie planszy
+#Zmienne list wszystkich rodzajów pól (ich położenia zapisywanego za pomocą tuple (x,y))
 lista_k = []
 lista_o = []
 lista_g = []
 
 
-def wypisz_plansze():
+def wypisz_plansze(): #Wypisuje obecne ustawienie planszy w konsoli
     i = 0
     print('    0', '   1', '   2')
     for rzad in plansza:
@@ -14,13 +15,14 @@ def wypisz_plansze():
         i += 1
 
 
-def znajdz_pionki():
+def znajdz_pionki(): #Znajduje i zapisuje obecne ustawienie pionków na planszy
     global plansza, lista_g, lista_k
+    #By szukać pionków zeruje listy, chyba da się to zrobić lepiej ale działa
     lista_g = []
     lista_k = []
     x = 0
     y = 0
-    for rzad in plansza:
+    for rzad in plansza: #Pętla znajdująca położenie wszystkich rodzajów pól
         for kolumna in rzad:
             if kolumna == 'g':
                 # print('g: {}, {}'.format(x, y))
@@ -35,10 +37,9 @@ def znajdz_pionki():
             y += 1
         y = 0
         x += 1
-lista_pustych_g = []
-lista_bic_g = []
 
-def znajdz_ruch_g():
+
+def znajdz_ruch_g(): #Znajduje możliwe ruchy dla gracza
     global plansza, lista_pustych_g, lista_bic_g
     lista_pustych_g = []
     lista_bic_g = []
@@ -68,7 +69,7 @@ lista_pustych_k = []
 lista_bic_k = []
 
 
-def znajdz_ruch_k():
+def znajdz_ruch_k(): #Znajduje możliwe ruchy dla komputera
     global plansza, lista_pustych_k, lista_bic_k
     lista_pustych_k = []
     lista_bic_k = []
@@ -94,7 +95,7 @@ def znajdz_ruch_k():
             pass
 
 
-def ruch_g():
+def ruch_g(): #Wyświetla możliwe ruchy z znajdz_ruch_g i pozwala na wybór któregoś z nich
     global plansza
     n = 1
     for ruch in lista_pustych_g:
@@ -114,7 +115,7 @@ def ruch_g():
     plansza[wybrany_ruch[1][0]][wybrany_ruch[1][1]] = 'g'
     wypisz_plansze()
 
-def ruch_k():
+def ruch_k(): #Losuje ruch komputera z znajdz_ruchy_k
     try:
         global plansza
         lista_ruchow_k = lista_pustych_k + lista_bic_k
@@ -130,7 +131,7 @@ def ruch_k():
     except ValueError:
         print('brak możliwych ruchów')
 
-def czy_koniec():
+def czy_koniec(): #Sprawdza czy gra się zakończyła - win condition
     global plansza
     ilosc_g = 0
     ilosc_k=0
@@ -165,7 +166,7 @@ def czy_koniec():
 # ruch_g()
 # ruch_k()
 wypisz_plansze()
-while True:
+while True: #Obecny substytut trwającej gry - wykonuje ww funkcje po kolei, TO DO: zmienić w funkcję
     znajdz_pionki()
     znajdz_ruch_g()
     ruch_g()
