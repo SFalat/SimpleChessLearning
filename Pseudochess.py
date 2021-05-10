@@ -1,13 +1,13 @@
 import random
 
-plansza = [['k', 'k', 'k'], ['O', 'O', 'O'], ['g', 'g', 'g']] #Początkowe ustawienie planszy
-#Zmienne list wszystkich rodzajów pól (ich położenia zapisywanego za pomocą tuple (x,y))
+plansza = [['k', 'k', 'k'], ['O', 'O', 'O'], ['g', 'g', 'g']]  # Początkowe ustawienie planszy
+# Zmienne list wszystkich rodzajów pól (ich położenia zapisywanego za pomocą tuple (x,y))
 lista_k = []
 lista_o = []
 lista_g = []
 
 
-def wypisz_plansze(): #Wypisuje obecne ustawienie planszy w konsoli
+def wypisz_plansze():  # Wypisuje obecne ustawienie planszy w konsoli
     i = 0
     print('    0', '   1', '   2')
     for rzad in plansza:
@@ -15,14 +15,14 @@ def wypisz_plansze(): #Wypisuje obecne ustawienie planszy w konsoli
         i += 1
 
 
-def znajdz_pionki(): #Znajduje i zapisuje obecne ustawienie pionków na planszy
+def znajdz_pionki():  # Znajduje i zapisuje obecne ustawienie pionków na planszy
     global plansza, lista_g, lista_k
-    #By szukać pionków zeruje listy, chyba da się to zrobić lepiej ale działa
+    # By szukać pionków zeruje listy, chyba da się to zrobić lepiej ale działa
     lista_g = []
     lista_k = []
     x = 0
     y = 0
-    for rzad in plansza: #Pętla znajdująca położenie wszystkich rodzajów pól
+    for rzad in plansza:  # Pętla znajdująca położenie wszystkich rodzajów pól
         for kolumna in rzad:
             if kolumna == 'g':
                 # print('g: {}, {}'.format(x, y))
@@ -39,11 +39,11 @@ def znajdz_pionki(): #Znajduje i zapisuje obecne ustawienie pionków na planszy
         x += 1
 
 
-def znajdz_ruch_g(): #Znajduje możliwe ruchy dla gracza
+def znajdz_ruch_g():  # Znajduje możliwe ruchy dla gracza
     global plansza, lista_pustych_g, lista_bic_g
     lista_pustych_g = []
     lista_bic_g = []
-    for pionek in lista_g:
+    for pionek in lista_g: #Skomplikowana pętla znajdująca możliwe ruchy i bicia, try i except uważa by listy nie mogły loopować się do -1
         if plansza[pionek[0] - 1][pionek[1]] == 'O':
             lista_pustych_g.append(((pionek[0], pionek[1]), (pionek[0] - 1, pionek[1])))
             # print('puste', pionek[0], pionek[1])
@@ -65,11 +65,7 @@ def znajdz_ruch_g(): #Znajduje możliwe ruchy dla gracza
             pass
 
 
-lista_pustych_k = []
-lista_bic_k = []
-
-
-def znajdz_ruch_k(): #Znajduje możliwe ruchy dla komputera
+def znajdz_ruch_k():  # Znajduje możliwe ruchy dla komputera
     global plansza, lista_pustych_k, lista_bic_k
     lista_pustych_k = []
     lista_bic_k = []
@@ -95,34 +91,39 @@ def znajdz_ruch_k(): #Znajduje możliwe ruchy dla komputera
             pass
 
 
-def ruch_g(): #Wyświetla możliwe ruchy z znajdz_ruch_g i pozwala na wybór któregoś z nich
+def ruch_g():  # Wyświetla możliwe ruchy z znajdz_ruch_g i pozwala na wybór któregoś z nich
     global plansza
     n = 1
     for ruch in lista_pustych_g:
-        print(n, 'Pionek znajdujący się na polu {},{} może poruszyć się na pole {},{}'.format(ruch[0][0], ruch[0][1], ruch[1][0], ruch[1][1]))
-        n+=1
+        print(n, 'Pionek znajdujący się na polu {},{} może poruszyć się na pole {},{}'.format(ruch[0][0], ruch[0][1],
+                                                                                              ruch[1][0], ruch[1][1]))
+        n += 1
     for ruch in lista_bic_g:
-        print(n,'Pionek znajdujący się na polu {},{} może bić piona na polu {},{}'.format(ruch[0][0], ruch[0][1], ruch[1][0], ruch[1][1]))
-        n+=1
+        print(n, 'Pionek znajdujący się na polu {},{} może bić piona na polu {},{}'.format(ruch[0][0], ruch[0][1],
+                                                                                           ruch[1][0], ruch[1][1]))
+        n += 1
     lista_ruchow_g = lista_pustych_g + lista_bic_g
+    #Win condition w wypadku braku możliwych ruchów
     if lista_ruchow_g == []:
         print('Komputer wygrał!')
         exit()
     ruch_gracza = int(input('Podaj który ruch chcesz wykonać: '))
-    wybrany_ruch = lista_ruchow_g[ruch_gracza-1]
+    wybrany_ruch = lista_ruchow_g[ruch_gracza - 1]
     print(wybrany_ruch)
     plansza[wybrany_ruch[0][0]][wybrany_ruch[0][1]] = 'O'
     plansza[wybrany_ruch[1][0]][wybrany_ruch[1][1]] = 'g'
     wypisz_plansze()
 
-def ruch_k(): #Losuje ruch komputera z znajdz_ruchy_k
+
+def ruch_k():  # Losuje ruch komputera z znajdz_ruchy_k
     try:
         global plansza
         lista_ruchow_k = lista_pustych_k + lista_bic_k
+        #Win condition przy braku możliwych ruchów
         if lista_ruchow_k == []:
             print('Gracz wygrał!')
             exit()
-        ruch_k = lista_ruchow_k[random.randrange(0,len(lista_ruchow_k))]
+        ruch_k = lista_ruchow_k[random.randrange(0, len(lista_ruchow_k))]
         print(lista_ruchow_k)
         print(ruch_k)
         plansza[ruch_k[0][0]][ruch_k[0][1]] = 'O'
@@ -131,28 +132,33 @@ def ruch_k(): #Losuje ruch komputera z znajdz_ruchy_k
     except ValueError:
         print('brak możliwych ruchów')
 
-def czy_koniec(): #Sprawdza czy gra się zakończyła - win condition
+
+def czy_koniec():  # Sprawdza czy gra się zakończyła - win condition
     global plansza
     ilosc_g = 0
-    ilosc_k=0
+    ilosc_k = 0
+    #Wygrana gdy gracz doszedł do drógej strony planszy
     for kolumna in plansza[0]:
         if kolumna == 'g':
             print('Gracz wygrał!')
             exit()
+    # Wygrana gdy komputer doszedł do drógej strony planszy
     for kolumna in plansza[2]:
         if kolumna == 'k':
             print('Komputer wygrał!')
             exit()
+    #Wygrana gdy któryś z graczy zniszczył wszystkie piony przeciwnika
     for rzad in plansza:
         for kolumna in rzad:
             if kolumna == 'g':
-                ilosc_g+=1
+                ilosc_g += 1
             elif kolumna == 'k':
-                ilosc_k+=1
+                ilosc_k += 1
     if ilosc_g == 0:
         print('Komputer wygrał!')
     elif ilosc_k == 0:
         print('Gracz wygrał!')
+
 
 # wypisz_plansze()
 # znajdz_pionki()
@@ -166,7 +172,7 @@ def czy_koniec(): #Sprawdza czy gra się zakończyła - win condition
 # ruch_g()
 # ruch_k()
 wypisz_plansze()
-while True: #Obecny substytut trwającej gry - wykonuje ww funkcje po kolei, TO DO: zmienić w funkcję
+while True:  # Obecny substytut trwającej gry - wykonuje ww funkcje po kolei, TO DO: zmienić w funkcję
     znajdz_pionki()
     znajdz_ruch_g()
     ruch_g()
