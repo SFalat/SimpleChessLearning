@@ -1,0 +1,184 @@
+import random
+
+plansza = [['k', 'k', 'k'], ['O', 'O', 'O'], ['g', 'g', 'g']]
+lista_k = []
+lista_o = []
+lista_g = []
+
+
+def wypisz_plansze():
+    i = 0
+    print('    0', '   1', '   2')
+    for rzad in plansza:
+        print(i, rzad)
+        i += 1
+
+
+def znajdz_pionki():
+    global plansza, lista_g, lista_k
+    lista_g = []
+    lista_k = []
+    x = 0
+    y = 0
+    for rzad in plansza:
+        for kolumna in rzad:
+            if kolumna == 'g':
+                # print('g: {}, {}'.format(x, y))
+                lista_g.append((x, y))
+            if kolumna == 'k':
+                # print('k: {}, {}'.format(x, y))
+                lista_k.append((x, y))
+            if kolumna == 'O':
+                # print('O: {}, {}'.format(x, y))
+                lista_o.append((x, y))
+
+            y += 1
+        y = 0
+        x += 1
+lista_pustych_g = []
+lista_bic_g = []
+
+def znajdz_ruch_g():
+    global plansza, lista_pustych_g, lista_bic_g
+    lista_pustych_g = []
+    lista_bic_g = []
+    for pionek in lista_g:
+        if plansza[pionek[0] - 1][pionek[1]] == 'O':
+            lista_pustych_g.append(((pionek[0], pionek[1]), (pionek[0] - 1, pionek[1])))
+            # print('puste', pionek[0], pionek[1])
+        try:
+            if pionek[0] - 1 == -1:
+                raise IndexError
+            if plansza[pionek[0] - 1][pionek[1] + 1] == 'k':
+                # print('można bić', pionek[0], pionek[1])
+                lista_bic_g.append(((pionek[0], pionek[1]), (pionek[0] - 1, pionek[1] + 1)))
+        except IndexError:
+            pass
+        try:
+            if pionek[1] - 1 == -1:
+                raise IndexError
+            if plansza[pionek[0] - 1][pionek[1] - 1] == 'k':
+                # print('można bić', pionek[0], pionek[1])
+                lista_bic_g.append(((pionek[0], pionek[1]), (pionek[0] - 1, pionek[1] - 1)))
+        except IndexError:
+            pass
+
+
+lista_pustych_k = []
+lista_bic_k = []
+
+
+def znajdz_ruch_k():
+    global plansza, lista_pustych_k, lista_bic_k
+    lista_pustych_k = []
+    lista_bic_k = []
+    for pionek in lista_k:
+        if plansza[pionek[0] + 1][pionek[1]] == 'O':
+            lista_pustych_k.append(((pionek[0], pionek[1]), (pionek[0] + 1, pionek[1])))
+            # print('puste', pionek[0], pionek[1])
+        try:
+            if pionek[1] - 1 == -1:
+                raise IndexError
+            if plansza[pionek[0] + 1][pionek[1] + 1] == 'g':
+                # print('można bić', pionek[0], pionek[1])
+                lista_bic_k.append(((pionek[0], pionek[1]), (pionek[0] + 1, pionek[1] + 1)))
+        except IndexError:
+            pass
+        try:
+            if pionek[1] - 1 == -1:
+                raise IndexError
+            if plansza[pionek[0] + 1][pionek[1] - 1] == 'g':
+                # print('można bić', pionek[0], pionek[1])
+                lista_bic_k.append(((pionek[0], pionek[1]), (pionek[0] + 1, pionek[1] - 1)))
+        except IndexError:
+            pass
+
+
+def ruch_g():
+    global plansza
+    n = 1
+    for ruch in lista_pustych_g:
+        print(n, 'Pionek znajdujący się na polu {},{} może poruszyć się na pole {},{}'.format(ruch[0][0], ruch[0][1], ruch[1][0], ruch[1][1]))
+        n+=1
+    for ruch in lista_bic_g:
+        print(n,'Pionek znajdujący się na polu {},{} może bić piona na polu {},{}'.format(ruch[0][0], ruch[0][1], ruch[1][0], ruch[1][1]))
+        n+=1
+    lista_ruchow_g = lista_pustych_g + lista_bic_g
+    if lista_ruchow_g == []:
+        print('Komputer wygrał!')
+        exit()
+    ruch_gracza = int(input('Podaj który ruch chcesz wykonać: '))
+    wybrany_ruch = lista_ruchow_g[ruch_gracza-1]
+    print(wybrany_ruch)
+    plansza[wybrany_ruch[0][0]][wybrany_ruch[0][1]] = 'O'
+    plansza[wybrany_ruch[1][0]][wybrany_ruch[1][1]] = 'g'
+    wypisz_plansze()
+
+def ruch_k():
+    try:
+        global plansza
+        lista_ruchow_k = lista_pustych_k + lista_bic_k
+        if lista_ruchow_k == []:
+            print('Gracz wygrał!')
+            exit()
+        ruch_k = lista_ruchow_k[random.randrange(0,len(lista_ruchow_k))]
+        print(lista_ruchow_k)
+        print(ruch_k)
+        plansza[ruch_k[0][0]][ruch_k[0][1]] = 'O'
+        plansza[ruch_k[1][0]][ruch_k[1][1]] = 'k'
+        wypisz_plansze()
+    except ValueError:
+        print('brak możliwych ruchów')
+
+def czy_koniec():
+    global plansza
+    ilosc_g = 0
+    ilosc_k=0
+    for kolumna in plansza[0]:
+        if kolumna == 'g':
+            print('Gracz wygrał!')
+            exit()
+    for kolumna in plansza[2]:
+        if kolumna == 'k':
+            print('Komputer wygrał!')
+            exit()
+    for rzad in plansza:
+        for kolumna in rzad:
+            if kolumna == 'g':
+                ilosc_g+=1
+            elif kolumna == 'k':
+                ilosc_k+=1
+    if ilosc_g == 0:
+        print('Komputer wygrał!')
+    elif ilosc_k == 0:
+        print('Gracz wygrał!')
+
+# wypisz_plansze()
+# znajdz_pionki()
+# znajdz_ruch_g()
+# znajdz_ruch_k()
+# print(lista_o, lista_g, lista_k)
+#
+# print(lista_pustych_k, lista_pustych_g)
+# print(lista_bic_k, lista_bic_g)
+#
+# ruch_g()
+# ruch_k()
+wypisz_plansze()
+while True:
+    znajdz_pionki()
+    znajdz_ruch_g()
+    ruch_g()
+    czy_koniec()
+    znajdz_pionki()
+    znajdz_ruch_k()
+    ruch_k()
+    czy_koniec()
+#
+# wypisz_plansze()
+# znajdz_pionki()
+# znajdz_ruch_k()
+# znajdz_ruch_g()
+# ruch_g()
+# znajdz_pionki()
+# znajdz_ruch_k()
