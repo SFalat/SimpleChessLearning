@@ -74,8 +74,7 @@ def znajdz_ruch_k():  # Znajduje możliwe ruchy dla komputera
             lista_pustych_k.append(((pionek[0], pionek[1]), (pionek[0] + 1, pionek[1])))
             # print('puste', pionek[0], pionek[1])
         try:
-            if pionek[1] - 1 == -1:
-                raise IndexError
+
             if plansza[pionek[0] + 1][pionek[1] + 1] == 'g':
                 # print('można bić', pionek[0], pionek[1])
                 lista_bic_k.append(((pionek[0], pionek[1]), (pionek[0] + 1, pionek[1] + 1)))
@@ -89,6 +88,7 @@ def znajdz_ruch_k():  # Znajduje możliwe ruchy dla komputera
                 lista_bic_k.append(((pionek[0], pionek[1]), (pionek[0] + 1, pionek[1] - 1)))
         except IndexError:
             pass
+    return lista_pustych_k + lista_bic_k
 
 
 def ruch_g():  # Wyświetla możliwe ruchy z znajdz_ruch_g i pozwala na wybór któregoś z nich
@@ -105,7 +105,7 @@ def ruch_g():  # Wyświetla możliwe ruchy z znajdz_ruch_g i pozwala na wybór k
     lista_ruchow_g = lista_pustych_g + lista_bic_g
     # Win condition w wypadku braku możliwych ruchów
     if lista_ruchow_g == []:
-        print('Komputer wygrał!')
+        print('Komputer wygrał! Brak możliwych ruchów')
         exit()
     ruch_gracza = int(input('Podaj który ruch chcesz wykonać: '))
     wybrany_ruch = lista_ruchow_g[ruch_gracza - 1]
@@ -121,7 +121,7 @@ def ruch_k():  # Losuje ruch komputera z znajdz_ruchy_k
         lista_ruchow_k = lista_pustych_k + lista_bic_k
         # Win condition przy braku możliwych ruchów
         if lista_ruchow_k == []:
-            print('Gracz wygrał!')
+            print('Gracz wygrał! Brak możliwych ruchów')
             exit()
         ruch_k = lista_ruchow_k[random.randrange(0, len(lista_ruchow_k))]
         print(lista_ruchow_k)
@@ -140,12 +140,12 @@ def czy_koniec():  # Sprawdza czy gra się zakończyła - win condition
     # Wygrana gdy gracz doszedł do drógej strony planszy
     for kolumna in plansza[0]:
         if kolumna == 'g':
-            print('Gracz wygrał!')
+            print('Gracz wygrał! Dotarł do końca')
             exit()
     # Wygrana gdy komputer doszedł do drógej strony planszy
     for kolumna in plansza[2]:
         if kolumna == 'k':
-            print('Komputer wygrał!')
+            print('Komputer wygrał! Dotarł do końca')
             exit()
     # Wygrana gdy któryś z graczy zniszczył wszystkie piony przeciwnika
     for rzad in plansza:
@@ -155,10 +155,9 @@ def czy_koniec():  # Sprawdza czy gra się zakończyła - win condition
             elif kolumna == 'k':
                 ilosc_k += 1
     if ilosc_g == 0:
-        print('Komputer wygrał!')
+        print('Komputer wygrał! Brak pionków przeciwnika')
     elif ilosc_k == 0:
-        print('Gracz wygrał!')
-
+        print('Gracz wygrał! Brak pionków przeciwnika')
 
 # wypisz_plansze()
 # znajdz_pionki()
@@ -171,17 +170,18 @@ def czy_koniec():  # Sprawdza czy gra się zakończyła - win condition
 #
 # ruch_g()
 # ruch_k()
-wypisz_plansze()
-while True:  # Obecny substytut trwającej gry - wykonuje ww funkcje po kolei, TO DO: zmienić w funkcję
-    znajdz_pionki()
-    znajdz_ruch_g()
-    ruch_g()
-    czy_koniec()
-    znajdz_pionki()
-    znajdz_ruch_k()
-    ruch_k()
-    czy_koniec()
-#
+# wypisz_plansze()
+# while True:  # Obecny substytut trwającej gry - wykonuje ww funkcje po kolei, TO DO: zmienić w funkcję
+#     znajdz_pionki()
+#     znajdz_ruch_g()
+#     ruch_g()
+#     czy_koniec()
+#     znajdz_pionki()
+#     znajdz_ruch_k()
+#     ruch_k()
+#     czy_koniec()
+
+
 # wypisz_plansze()
 # znajdz_pionki()
 # znajdz_ruch_k()
