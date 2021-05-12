@@ -117,17 +117,17 @@ def ruch_g():  # Wyświetla możliwe ruchy z znajdz_ruch_g i pozwala na wybór k
 
 def ruch_k():  # Losuje ruch komputera z znajdz_ruchy_k
     try:
-        global plansza
+        global plansza, ruch_komputera
         lista_ruchow_k = lista_pustych_k + lista_bic_k
         # Win condition przy braku możliwych ruchów
         if lista_ruchow_k == []:
             print('Gracz wygrał! Brak możliwych ruchów')
             exit()
-        ruch_k = lista_ruchow_k[random.randrange(0, len(lista_ruchow_k))]
+        ruch_komputera = lista_ruchow_k[random.randrange(0, len(lista_ruchow_k))]
         print(lista_ruchow_k)
-        print(ruch_k)
-        plansza[ruch_k[0][0]][ruch_k[0][1]] = 'O'
-        plansza[ruch_k[1][0]][ruch_k[1][1]] = 'k'
+        print(ruch_komputera)
+        plansza[ruch_komputera[0][0]][ruch_komputera[0][1]] = 'O'
+        plansza[ruch_komputera[1][0]][ruch_komputera[1][1]] = 'k'
         wypisz_plansze()
     except ValueError:
         print('brak możliwych ruchów')
