@@ -5,7 +5,8 @@ plansza = [['k', 'k', 'k'], ['O', 'O', 'O'], ['g', 'g', 'g']]  # Początkowe ust
 lista_k = []
 lista_o = []
 lista_g = []
-
+licznik_zwyciestw = [0,0]
+wygrana = ''
 
 def wypisz_plansze():  # Wypisuje obecne ustawienie planszy w konsoli
     i = 0
@@ -92,7 +93,7 @@ def znajdz_ruch_k():  # Znajduje możliwe ruchy dla komputera
 
 
 def ruch_g():  # Wyświetla możliwe ruchy z znajdz_ruch_g i pozwala na wybór któregoś z nich
-    global plansza
+    global plansza, wygrana
     n = 1
     for ruch in lista_pustych_g:
         print(n, 'Pionek znajdujący się na polu {},{} może poruszyć się na pole {},{}'.format(ruch[0][0], ruch[0][1],
@@ -106,7 +107,8 @@ def ruch_g():  # Wyświetla możliwe ruchy z znajdz_ruch_g i pozwala na wybór k
     # Win condition w wypadku braku możliwych ruchów
     if lista_ruchow_g == []:
         print('Komputer wygrał! Brak możliwych ruchów')
-        exit()
+        wygrana = 'k'
+        restart()
     ruch_gracza = int(input('Podaj który ruch chcesz wykonać: '))
     wybrany_ruch = lista_ruchow_g[ruch_gracza - 1]
     print(wybrany_ruch)
@@ -117,12 +119,13 @@ def ruch_g():  # Wyświetla możliwe ruchy z znajdz_ruch_g i pozwala na wybór k
 
 def ruch_k():  # Losuje ruch komputera z znajdz_ruchy_k
     try:
-        global plansza, ruch_komputera
+        global plansza, ruch_komputera, wygrana
         lista_ruchow_k = lista_pustych_k + lista_bic_k
         # Win condition przy braku możliwych ruchów
         if lista_ruchow_k == []:
             print('Gracz wygrał! Brak możliwych ruchów')
-            exit()
+            wygrana = 'g'
+            restart()
         ruch_komputera = lista_ruchow_k[random.randrange(0, len(lista_ruchow_k))]
         print(lista_ruchow_k)
         print(ruch_komputera)
@@ -134,19 +137,21 @@ def ruch_k():  # Losuje ruch komputera z znajdz_ruchy_k
 
 
 def czy_koniec():  # Sprawdza czy gra się zakończyła - win condition
-    global plansza
+    global plansza, wygrana
     ilosc_g = 0
     ilosc_k = 0
     # Wygrana gdy gracz doszedł do drógej strony planszy
     for kolumna in plansza[0]:
         if kolumna == 'g':
             print('Gracz wygrał! Dotarł do końca')
-            exit()
+            wygrana = 'g'
+            restart()
     # Wygrana gdy komputer doszedł do drógej strony planszy
     for kolumna in plansza[2]:
         if kolumna == 'k':
             print('Komputer wygrał! Dotarł do końca')
-            exit()
+            wygrana = 'k'
+            restart()
     # Wygrana gdy któryś z graczy zniszczył wszystkie piony przeciwnika
     for rzad in plansza:
         for kolumna in rzad:
@@ -159,6 +164,20 @@ def czy_koniec():  # Sprawdza czy gra się zakończyła - win condition
     elif ilosc_k == 0:
         print('Gracz wygrał! Brak pionków przeciwnika')
 
+
+
+def restart():
+    global plansza, wygrana
+    if wygrana == 'k':
+        licznik_zwyciestw[0]+=1
+        print('Komputer: {}, Gracz: {}'.format(licznik_zwyciestw[0], licznik_zwyciestw[1]))
+    else:
+        licznik_zwyciestw[1]+=1
+        print('Komputer: {}, Gracz: {}'.format(licznik_zwyciestw[0], licznik_zwyciestw[1]))
+    plansza = [['k', 'k', 'k'], ['O', 'O', 'O'], ['g', 'g', 'g']]
+    print('\n\n\n\n')
+    if wygrana == 'k':
+        wypisz_plansze()
 # wypisz_plansze()
 # znajdz_pionki()
 # znajdz_ruch_g()
